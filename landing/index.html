@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolver - Desarrollo Potenciado por IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: #667eea;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        /* Transparency Section */
+        .transparency {
+            background: #f8f9fa;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .transparency h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .transparency > div > p {
+            font-size: 1.3rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .benefit-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .benefit-card p {
+            color: #666;
+        }
+        
+        /* Industries Section */
+        .industries {
+            padding: 100px 0;
+        }
+        
+        .industries h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+        }
+        
+        .industries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .industry-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s;
+        }
+        
+        .industry-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 40px rgba(102,126,234,0.15);
+        }
+        
+        .industry-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .industry-icon {
+            font-size: 2.5rem;
+        }
+        
+        .industry-card h3 {
+            font-size: 1.4rem;
+            color: #333;
+        }
+        
+        .agent-name {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .use-cases {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .use-cases li {
+            padding: 8px 0;
+            color: #555;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .use-cases li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        /* Process Section */
+        .process {
+            background: #1a1a2e;
+            color: white;
+            padding: 100px 0;
+        }
+        
+        .process h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+        }
+        
+        .process-table {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        td {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .offer-box {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 40px auto;
+            text-align: left;
+        }
+        
+        .offer-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .offer-list {
+            list-style: none;
+        }
+        
+        .offer-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .offer-list li:before {
+            content: "🎁";
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: #0f0f1a;
+            color: white;
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            margin-bottom: 40px;
+        }
+        
+        .footer-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .quote {
+            font-style: italic;
+            color: rgba(255,255,255,0.5);
+            margin-top: 30px;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .industries-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge">🚀 Startup Tech • GMT+8 • Servicios Globales</div>
+            <h1>Resolver</h1>
+            <p>Desarrollo de Software Potenciado por IA<br>
+            <span style="font-size: 1.1rem; opacity: 0.9;">+ Agentes Especializados por Industria</span></p>
+            <a href="#contacto" class="cta-button">Agendar Diagnóstico Gratis →</a>
+        </div>
+    </section>
+
+    <!-- Transparency Section -->
+    <section class="transparency">
+        <div class="container">
+            <h2>Somos Transparentes</h2>
+            <p>Usamos IA en nuestro proceso de desarrollo. No lo ocultamos, lo celebramos. Tú te beneficias de velocidad, calidad y costos reducidos.</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>3x Más Rápido</h3>
+                    <p>Entregas en semanas, no meses. La IA acelera sin sacrificar calidad.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>30-50% Menos Costo</h3>
+                    <p>Eficiencia que traducimos en ahorro real para tu presupuesto.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🧠</div>
+                    <h3>Código Ownership 100%</h3>
+                    <p>Todo el código es tuyo. Documentado, limpio, mantenible.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Especialización Real</h3>
+                    <p>Agentes entrenados en la jerga y procesos de TU industria.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section class="industries">
+        <div class="container">
+            <h2>Agentes por Industria</h2>
+            <p class="section-subtitle">Cada sector tiene su lenguaje. Creamos agentes especializados que hablan tu idioma.</p>
+            
+            <div class="industries-grid">
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">🏥</span>
+                        <h3>HealthTech / Salud</h3>
+                    </div>
+                    <span class="agent-name">MediBot</span>
+                    <p>Conocimiento en HIPAA, historias clínicas, terminología médica.</p>
+                    <ul class="use-cases">
+                        <li>Agendamiento inteligente</li>
+                        <li>Triage inicial automatizado</li>
+                        <li>Seguimiento de pacientes</li>
+                        <li>Integración con HIS y wearables</li>
+                    </ul>
+                </div>
+
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">🏦</span>
+                        <h3>FinTech / Banca</h3>
+                    </div>
+                    <span class="agent-name">FinanceBot</span>
+                    <p>Compliance, KYC/AML, productos financieros, reporting regulatorio.</p>
+                    <ul class="use-cases">
+                        <li>Onboarding digital de clientes</li>
+                        <li>Análisis de crédito instantáneo</li>
+                        <li>Detección de fraude</li>
+                        <li>Integración core banking</li>
+                    </ul>
+                </div>
+
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">🛒</span>
+                        <h3>E-commerce / Retail</h3>
+                    </div>
+                    <span class="agent-name">CommerceBot</span>
+                    <p>Inventario, customer experience, recomendaciones, logística.</p>
+                    <ul class="use-cases">
+                        <li>Atención al cliente 24/7</li>
+                        <li>Upselling personalizado</li>
+                        <li>Tracking de pedidos</li>
+                        <li>Gestión de devoluciones</li>
+                    </ul>
+                </div>
+
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">🏭</span>
+                        <h3>Manufacturing</h3>
+                    </div>
+                    <span class="agent-name">FactoryBot</span>
+                    <p>Lean, Six Sigma, mantenimiento predictivo, optimización.</p>
+                    <ul class="use-cases">
+                        <li>Monitoreo de líneas de producción</li>
+                        <li>Reporte de incidentes</li>
+                        <li>Capacitación de operarios</li>
+                        <li>Integración SCADA/MES</li>
+                    </ul>
+                </div>
+
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">📚</span>
+                        <h3>EdTech / Educación</h3>
+                    </div>
+                    <span class="agent-name">EduBot</span>
+                    <p>Pedagogía, evaluación adaptativa, orientación vocacional.</p>
+                    <ul class="use-cases">
+                        <li>Tutor virtual personalizado</li>
+                        <li>Feedback automático</li>
+                        <li>Orientación vocacional</li>
+                        <li>Integración LMS</li>
+                    </ul>
+                </div>
+
+                <div class="industry-card">
+                    <div class="industry-header">
+                        <span class="industry-icon">⚖️</span>
+                        <h3>Legal / Jurídico</h3>
+                    </div>
+                    <span class="agent-name">LegalBot</span>
+                    <p>Jurisprudencia, contratos, compliance legal, research.</p>
+                    <ul class="use-cases">
+                        <li>Primera revisión de contratos</li>
+                        <li>Research legal automatizado</li>
+                        <li>Citación de jurisprudencia</li>
+                        <li>Gestión documental</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process">
+        <div class="container">
+            <h2>Nuestro Proceso Transparente</h2>
+            <div class="process-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Etapa</th>
+                            <th>Qué hacemos</th>
+                            <th>Rol de la IA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🔍 Discovery</strong></td>
+                            <td>Entrevistas, mapeo de procesos</td>
+                            <td>Análisis automático de requisitos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🎨 Diseño</strong></td>
+                            <td>Arquitectura, UX/UI</td>
+                            <td>Generación de wireframes, validación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>💻 Desarrollo</strong></td>
+                            <td>Code review, QA</td>
+                            <td>Generación código, tests automáticos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🚀 Deploy</strong></td>
+                            <td>CI/CD, monitoreo</td>
+                            <td>Optimización performance, alertas</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🔧 Mantenimiento</strong></td>
+                            <td>Soporte, evolutivos</td>
+                            <td>Detección proactiva de issues</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contacto">
+        <div class="container">
+            <h2>Oferta de Lanzamiento</h2>
+            <p style="font-size: 1.3rem; opacity: 0.9;">Primer Agente Personalizado GRATIS</p>
+            
+            <div class="offer-box">
+                <h3>Para los primeros 5 clientes de cada industria:</h3>
+                <ul class="offer-list">
+                    <li>Diagnóstico gratuito ($500 valor)</li>
+                    <li>20% descuento en setup del agente</li>
+                    <li>3 meses de soporte premium incluido</li>
+                    <li>Garantía ROI: Si no ves resultados en 90 días, devolvemos el 50%</li>
+                </ul>
+            </div>
+            
+            <a href="mailto:hola@resolver.tech?subject=Diagnóstico%20Gratis" class="cta-button" style="background: white; color: #667eea;">
+                Solicitar Diagnóstico Gratis →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h3>Resolver</h3>
+                <p>Desarrollo potenciado por IA + Agentes especializados</p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">📧 hola@resolver.tech</div>
+                    <div class="contact-item">🌐 www.resolver.tech</div>
+                    <div class="contact-item">📍 GMT+8 | Servicios Globales</div>
+                </div>
+                
+                <p class="quote">"La IA no reemplaza developers. Los developers que usan IA reemplazan a los que no."</p>
+            </div>
+            
+            <p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">
+                © 2025 Resolver. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
