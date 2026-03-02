@@ -2,6 +2,7 @@
 
 ## 📋 Requisitos Previos
 
+### Linux / macOS
 - Servidor con Ubuntu 22.04 LTS (o similar)
 - PHP 8.3+ con extensiones: pgsql, mbstring, xml, curl, zip, bcmath
 - PostgreSQL 16+
@@ -10,344 +11,355 @@
 - Certbot (para SSL)
 - Git
 
+### Windows
+- Windows 10/11 Pro o Enterprise
+- Docker Desktop para Windows
+- WSL2 (Windows Subsystem for Linux) - Opcional pero recomendado
+- Git para Windows
+- PowerShell 5.1+ o PowerShell Core 7+
+
 ---
 
-## 1️⃣ Backend API (Laravel)
+## 🚀 Despliegue Rápido
 
-### Preparación del Servidor
+### Opción 1: Docker Compose (Recomendado para todos los sistemas)
 
+#### Linux / macOS
 ```bash
-# Instalar dependencias
-sudo apt update
-sudo apt install -y php8.3-fpm php8.3-pgsql php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip php8.3-bcmath
-sudo apt install -y nginx postgresql redis composer
-
-# Configurar PostgreSQL
-sudo -u postgres psql -c "CREATE DATABASE resolver_db;"
-sudo -u postgres psql -c "CREATE USER resolver_user WITH PASSWORD 'tu_password_seguro';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE resolver_db TO resolver_user;"
-```
-
-### Despliegue
-
-```bash
-# Clonar repositorio
-cd /var/www
+# 1. Clonar repositorio
 git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
 
-# Configurar backend
-cd resolver/apps/api
+# 2. Configurar variables de entorno
 cp .env.example .env
+# Editar .env con tus credenciales
 
-# Editar .env con tus valores:
-# DB_CONNECTION=pgsql
-# DB_HOST=127.0.0.1
-# DB_PORT=5432
-# DB_DATABASE=resolver_db
-# DB_USERNAME=resolver_user
-# DB_PASSWORD=tu_password_seguro
-#
-# OPENROUTER_API_KEY=tu_api_key_de_openrouter
-
-# Instalar dependencias
-composer install --no-dev --optimize-autoloader
-
-# Generar key y ejecutar migraciones
-php artisan key:generate
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Permisos
-chmod -R 775 storage bootstrap/cache
-chown -R www-data:www-data .
+# 3. Ejecutar script de despliegue
+./scripts/deploy.sh production
 ```
 
-### Configuración Nginx
+#### Windows (PowerShell) ⭐ Recomendado
+```powershell
+# 1. Clonar repositorio
+git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
 
-```nginx
-server {
-    listen 80;
-    server_name api.resolver.tech;
-    root /var/www/resolver/apps/api/public;
+# 2. Configurar variables de entorno
+copy .env.example .env
+# Editar .env con Notepad, VS Code, etc.
 
-    index index.php;
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
-    }
-
-    location ~ /\.ht {
-        deny all;
-    }
-}
+# 3. Ejecutar script de despliegue
+.\scripts\deploy.ps1 production
 ```
 
----
+#### Windows (CMD/Batch) - Alternativa simple
+```cmd
+# 1. Clonar y navegar
+git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
 
-## 2️⃣ Landing Page (Next.js)
+# 2. Copiar archivo de configuración
+copy .env.example .env
 
-### Build y Despliegue
+# 3. Ejecutar batch file
+scripts\deploy.bat
+```
 
+#### Windows con WSL2 (Mejor rendimiento)
 ```bash
-cd /var/www/resolver/apps/landing
+# Abrir WSL2 terminal (Ubuntu)
+cd /mnt/c/Users/TuUsuario/proyectos  # O tu directorio preferido
 
-# Instalar dependencias
-npm ci
+# Clonar y desplegar
+git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
+cp .env.example .env
+nano .env  # Editar variables
 
-# Crear archivo .env.local
-cat > .env.local << EOF
-NEXT_PUBLIC_API_URL=https://api.resolver.tech/api/v1
-NEXT_PUBLIC_WIDGET_URL=https://widget.resolver.tech
-EOF
-
-# Build para producción
-npm run build
-
-# Iniciar con PM2
-npm install -g pm2
-pm2 start npm --name "resolver-landing" -- start
-pm2 save
-pm2 startup
-```
-
-### Configuración Nginx (Proxy)
-
-```nginx
-server {
-    listen 80;
-    server_name resolver.tech www.resolver.tech;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
+# Ejecutar con script Linux
+./scripts/deploy.sh production
 ```
 
 ---
 
-## 3️⃣ Chatbot Widget
+## 🪟 Guía Específica para Windows
 
-### Build y Publicación
+### Método 1: Docker Desktop + PowerShell (Más fácil)
 
-```bash
-cd /var/www/resolver/apps/chatbot-widget
+#### Paso 1: Instalar prerequisitos
+1. Descargar e instalar [Docker Desktop](https://www.docker.com/products/docker-desktop)
+2. Habilitar integración con WSL2 durante la instalación
+3. Instalar [Git para Windows](https://git-scm.com/download/win)
 
-# Instalar dependencias
-npm ci
+#### Paso 2: Configurar proyecto
+```powershell
+# Abrir PowerShell como Administrador
+# Navegar al directorio donde quieras el proyecto
+cd C:\Proyectos
 
-# Crear archivo .env.production
-cat > .env.production << EOF
-VITE_API_URL=https://api.resolver.tech/api/v1
-EOF
+# Clonar repositorio
+git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
 
-# Build para producción
-npm run build
+# Crear archivo de configuración
+copy .env.example .env
 
-# Los archivos estarán en dist/
-# Copiar a directorio web o CDN
-sudo cp -r dist/* /var/www/widget.resolver.tech/
+# Editar .env con tus valores (usando Notepad o VS Code)
+notepad .env
 ```
 
-### Uso del Widget (Script Tag)
-
-```html
-<!-- En tu HTML -->
-<div id="resolver-chat"></div>
-<script src="https://widget.resolver.tech/resolver-chat.umd.js"></script>
-<script>
-  window.ResolverChat.init({
-    apiEndpoint: 'https://api.resolver.tech/api/v1',
-    position: 'bottom-right',
-    primaryColor: '#3b82f6'
-  });
-</script>
-```
-
----
-
-## 4️⃣ Backoffice Admin
-
-### Build y Despliegue
-
-```bash
-cd /var/www/resolver/apps/backoffice
-
-# Instalar dependencias
-npm ci
-
-# Crear archivo .env.production
-cat > .env.production << EOF
-VITE_API_URL=https://api.resolver.tech/api/v1
-EOF
-
-# Build para producción
-npm run build
-
-# Iniciar con PM2 en puerto 3001
-pm2 serve dist 3001 --name "resolver-backoffice"
-pm2 save
-```
-
-### Configuración Nginx
-
-```nginx
-server {
-    listen 80;
-    server_name admin.resolver.tech;
-
-    location / {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
----
-
-## 5️⃣ SSL con Let's Encrypt
-
-```bash
-# Instalar Certbot
-sudo apt install certbot python3-certbot-nginx
-
-# Obtener certificados
-sudo certbot --nginx -d resolver.tech -d www.resolver.tech
-sudo certbot --nginx -d api.resolver.tech
-sudo certbot --nginx -d widget.resolver.tech
-sudo certbot --nginx -d admin.resolver.tech
-
-# Auto-renewal ya está configurado
-```
-
----
-
-## 6️⃣ Variables de Entorno Completas
-
-### Backend (.env)
-
+**Variables mínimas a configurar en .env:**
 ```env
-APP_NAME=ResolverAPI
-APP_ENV=production
-APP_KEY=base64:generar_con_php_artisan_key:generate
-APP_DEBUG=false
-APP_URL=https://api.resolver.tech
-
-LOG_CHANNEL=stack
-LOG_LEVEL=error
-
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=resolver_db
-DB_USERNAME=resolver_user
-DB_PASSWORD=tu_password_seguro
-
-BROADCAST_DRIVER=log
-CACHE_DRIVER=redis
-FILESYSTEM_DISK=local
-QUEUE_CONNECTION=redis
-SESSION_DRIVER=redis
-SESSION_LIFETIME=120
-
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-OPENROUTER_API_KEY=sk-or-v1-tu-api-key-de-openrouter
+DB_PASSWORD=tu_password_seguro_aqui
+OPENROUTER_API_KEY=sk-or-v1-tu-api-key
+JWT_SECRET=generar_una_clave_larga_y_segura
 ```
+
+#### Paso 3: Ejecutar despliegue
+```powershell
+# Ejecutar script PowerShell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+.\scripts\deploy.ps1
+
+# O usar el batch file más simple
+scripts\deploy.bat
+```
+
+#### Paso 4: Acceder a los servicios
+- Landing Page: http://localhost:3000
+- Backoffice: http://localhost:3001
+- API: http://localhost:8000
 
 ---
 
-## 7️⃣ Comandos Útiles
+### Método 2: WSL2 (Recomendado para desarrollo)
 
+#### Paso 1: Instalar WSL2
+```powershell
+# En PowerShell como Administrador
+wsl --install
+# Reiniciar computadora
+```
+
+#### Paso 2: Configurar Ubuntu en WSL2
 ```bash
-# Ver logs del backend
-sudo tail -f /var/log/nginx/error.log
-sudo tail -f /var/www/resolver/apps/api/storage/logs/laravel.log
+# Abrir Ubuntu desde el menú Inicio
+sudo apt update && sudo apt upgrade -y
 
-# Reiniciar servicios
-sudo systemctl restart nginx
-sudo systemctl restart php8.3-fpm
-sudo systemctl restart postgresql
+# Instalar Docker dentro de WSL2
+sudo apt install docker.io docker-compose -y
 
-# PM2 management
-pm2 status
-pm2 logs
-pm2 restart all
+# Agregar usuario al grupo docker
+sudo usermod -aG docker $USER
+# Cerrar y volver a abrir terminal
+```
 
-# Actualizar código
-cd /var/www/resolver
-git pull origin main
+#### Paso 3: Desplegar proyecto
+```bash
+# Navegar a tu directorio de proyectos de Windows
+cd /mnt/c/Users/TuUsuario/Proyectos
 
-# Actualizar backend
-cd apps/api
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan optimize
+# Clonar y desplegar
+git clone https://github.com/mauromauromauromaurotoranzo-ctrl/resolver.git
+cd resolver
+cp .env.example .env
+nano .env  # Editar configuración
 
-# Actualizar frontend
-cd apps/landing && npm ci && npm run build && pm2 restart resolver-landing
-cd apps/backoffice && npm ci && npm run build && pm2 restart resolver-backoffice
+# Desplegar
+./scripts/deploy.sh production
 ```
 
 ---
 
-## 8️⃣ Checklist Post-Despliegue
+### Método 3: Manual sin Docker (Avanzado)
 
-- [ ] Backend responde en `https://api.resolver.tech`
-- [ ] Landing page carga en `https://resolver.tech`
-- [ ] Widget se carga desde `https://widget.resolver.tech`
-- [ ] Backoffice accesible en `https://admin.resolver.tech`
-- [ ] SSL certificates válidos
-- [ ] Base de datos conectada
-- [ ] Migraciones ejecutadas
+Si prefieres no usar Docker en Windows, necesitas instalar cada componente manualmente:
+
+#### 1. Instalar XAMPP o Laragon
+- Descargar [XAMPP](https://www.apachefriends.org/) con PHP 8.3 y PostgreSQL
+- O usar [Laragon](https://laragon.org/) (más fácil para Laravel)
+
+#### 2. Instalar Node.js
+- Descargar [Node.js 20 LTS](https://nodejs.org/)
+
+#### 3. Configurar backend (Laravel)
+```powershell
+# En PowerShell
+cd apps\api
+
+# Copiar .env
+copy .env.example .env
+
+# Editar .env con configuración local
+notepad .env
+
+# Instalar dependencias PHP (requiere Composer)
+composer install
+
+# Generar key
+php artisan key:generate
+
+# Ejecutar migraciones
+php artisan migrate
+
+# Iniciar servidor de desarrollo
+php artisan serve
+```
+
+#### 4. Configurar frontend (Landing)
+```powershell
+cd apps\landing
+npm install
+npm run dev
+```
+
+#### 5. Configurar backoffice
+```powershell
+cd apps\backoffice
+npm install
+npm run dev
+```
+
+---
+
+## 🔧 Comandos Útiles por Sistema Operativo
+
+### Ver logs
+
+**Linux/macOS:**
+```bash
+docker-compose logs -f
+docker-compose logs -f api
+docker-compose logs -f landing
+```
+
+**Windows (PowerShell):**
+```powershell
+docker-compose logs -f
+docker-compose logs -f api
+docker-compose logs -f landing
+```
+
+**Windows (CMD):**
+```cmd
+docker-compose logs -f
+docker-compose logs -f api
+```
+
+### Backup de base de datos
+
+**Linux/macOS:**
+```bash
+./scripts/backup.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+.\scripts\backup.ps1
+```
+
+**Windows (Manual):**
+```powershell
+docker-compose exec postgres pg_dump -U resolver_user resolver_db > backup_$(Get-Date -Format 'yyyyMMdd').sql
+```
+
+### Detener servicios
+
+**Todos los sistemas:**
+```bash
+docker-compose down
+```
+
+### Actualizar código
+
+**Linux/macOS/WSL2:**
+```bash
+git pull origin main
+./scripts/deploy.sh
+```
+
+**Windows (PowerShell):**
+```powershell
+git pull origin main
+.\scripts\deploy.ps1
+```
+
+---
+
+## ⚠️ Solución de Problemas en Windows
+
+### Error: "docker-compose no se reconoce"
+**Solución:** Docker Desktop no está instalado o no está en el PATH. Reiniciar después de instalar Docker Desktop.
+
+### Error: "El ejecutable de scripts está deshabilitado"
+**Solución:** Ejecutar en PowerShell como Administrador:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Error: "Puerto ya está en uso"
+**Solución:** Algunos puertos pueden estar ocupados por otros servicios de Windows:
+```powershell
+# Ver qué proceso usa el puerto 3000
+netstat -ano | findstr :3000
+
+# Matar proceso (reemplazar PID con el número que aparezca)
+taskkill /PID <PID> /F
+```
+
+### Error de permisos en volúmenes Docker
+**Solución:** En Windows, los permisos de archivos entre host y contenedor pueden causar problemas. Usar WSL2 es la mejor solución.
+
+### Problemas con caracteres especiales
+**Solución:** Asegurarse de guardar archivos .env con codificación UTF-8 sin BOM.
+
+---
+
+## 📁 Estructura de Archivos de Scripts
+
+```
+resolver/
+├── scripts/
+│   ├── deploy.sh          # Linux/macOS
+│   ├── deploy.ps1         # Windows PowerShell ⭐
+│   ├── deploy.bat         # Windows CMD (simple)
+│   ├── backup.sh          # Linux/macOS
+│   └── backup.ps1         # Windows PowerShell
+└── ...
+```
+
+---
+
+## ✅ Checklist Post-Despliegue (Todos los SO)
+
+- [ ] Backend responde en `http://localhost:8000`
+- [ ] Landing page carga en `http://localhost:3000`
+- [ ] Backoffice accesible en `http://localhost:3001`
+- [ ] Base de datos conectada (verificar en logs)
+- [ ] Migraciones ejecutadas sin errores
 - [ ] OpenRouter API key configurada
 - [ ] Logs sin errores críticos
-- [ ] Rate limiting funcionando
-- [ ] CORS configurado correctamente
+- [ ] Widget puede comunicarse con API
 
 ---
 
-## 🔧 Troubleshooting
+## 🌐 Para Producción con Dominios Reales
 
-### Error 500 en API
-```bash
-# Ver permisos
-sudo chown -R www-data:www-data /var/www/resolver/apps/api/storage
-sudo chmod -R 775 /var/www/resolver/apps/api/storage
+Cuando estés listo para producción con dominios propios:
 
-# Limpiar caches
-php artisan cache:clear
-php artisan config:clear
-```
+### Opción A: VPS Cloud (DigitalOcean, AWS, Azure)
+Seguir la guía detallada en secciones posteriores de este documento (configuración manual con Nginx).
 
-### CORS Errors
-Verificar `config/cors.php` y agregar dominios permitidos.
-
-### Widget no carga
-Verificar que los archivos estén en el directorio correcto y accesibles vía HTTPS.
+### Opción B: Plataformas PaaS
+- **Railway**, **Render**, **Fly.io**: Soportan despliegue directo desde GitHub
+- Configurar variables de entorno en el dashboard de la plataforma
+- Conectar repositorio y activar auto-deploy
 
 ---
 
 ## 📞 Soporte
 
-Para problemas específicos, revisar:
-- Logs de Laravel: `storage/logs/`
-- Logs de Nginx: `/var/log/nginx/`
-- Logs de PM2: `pm2 logs`
+Para problemas específicos:
+1. Revisar logs: `docker-compose logs -f [servicio]`
+2. Verificar variables de entorno en `.env`
+3. Consultar documentación en `CUSTOM_DEV/CHATBOT/`
