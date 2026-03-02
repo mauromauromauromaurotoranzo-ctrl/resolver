@@ -2,8 +2,8 @@
 ## Chatbot de Pre-venta - Resolver.tech
 
 **Última actualización:** 2025-03-03  
-**Estado general:** 🚧 En diseño / Documentación  
-**Versión:** 0.1.0
+**Estado general:** 🚧 En desarrollo activo  
+**Versión:** 0.2.0
 
 ---
 
@@ -12,13 +12,14 @@
 | Fase | Progreso | Estado |
 |------|----------|--------|
 | Diseño y Documentación | ██████████ 100% | ✅ Completado |
-| Setup Técnico | ██████░░░░ 60% | 🚧 En curso |
-| Desarrollo Backend | ████░░░░░░ 40% | 🚧 En curso |
-| Desarrollo Frontend | ░░░░░░░░░░ 0% | ⏳ Pendiente |
+| Backend API (Laravel) | ████████░░ 80% | 🚧 En curso |
+| Frontend Widget (React) | █████████░ 90% | 🚧 En curso |
+| Landing Page | ░░░░░░░░░░ 0% | ⏳ Pendiente |
+| Backoffice | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Testing | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Deploy | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 
-**Overall Progress:** 35%
+**Overall Progress:** 55%
 
 ---
 
@@ -31,170 +32,99 @@
 - [x] Technical Specification inicial
 - [x] Estructura de carpetas del repositorio
 
-### Definiciones Clave
-- [x] Objetivos del chatbot
-- [x] Flujos principales de conversación
-- [x] Stack tecnológico propuesto
-- [x] Arquitectura general
-- [x] Estructura de base de datos
+### Backend API (Laravel)
+- [x] Estructura de directorios
+- [x] Migraciones de base de datos (4 tablas)
+- [x] Modelos Eloquent (ChatSession, ChatMessage, Lead, BotConfiguration)
+- [x] LLMService con soporte multi-modelo (OpenRouter)
+- [x] EstimatorService con lógica de complejidad
+- [x] ChatController (endpoints principales)
+- [x] AdminController (gestión de leads y config)
+- [x] Rutas API definidas
+
+### Frontend Widget (React + TypeScript + Vite)
+- [x] Setup completo del proyecto
+- [x] Tipos TypeScript
+- [x] Servicio API
+- [x] Hook useChat
+- [x] Componente ChatWidget principal
+- [x] MessageBubble con markdown básico
+- [x] QuickReplies component
+- [x] TypingIndicator animado
+- [x] ChatInput con auto-resize
+- [x] **ModelSelector (múltiples LLMs configurables)** ✅
+- [x] Estilos CSS con Tailwind + animaciones
+- [x] Demo HTML funcional
 
 ---
 
 ## 🚧 En Progreso
 
-### Backend API (Laravel)
-- [x] Estructura de directorios
-- [x] Migraciones de base de datos
-- [x] Modelos Eloquent
-- [x] LLMService (OpenRouter integration)
-- [x] EstimatorService
-- [x] ChatController
-- [x] AdminController
-- [ ] Configuración de rutas API
-- [ ] Middleware de autenticación
+### Backend
+- [ ] Middleware de autenticación para backoffice
 - [ ] Jobs de notificación email
+- [ ] Testing de endpoints
 
-### Diseño
-- [x] Definir nombre final del asistente: **Resolver Assistant**
-- [ ] Refinar prompts del sistema según feedback
-- [ ] Diseñar avatar/personaje visual del bot
-- [ ] Mockups de UI del widget
-
-### Planificación
-- [ ] Priorizar features para MVP
-- [ ] Estimar tiempos más precisos
-- [ ] Asignar responsabilidades (si hay equipo)
+### Frontend
+- [ ] Build para producción (CDN)
+- [ ] Testing manual integrado con backend
+- [ ] Optimizaciones de performance
 
 ---
 
 ## ⏳ Pendiente
 
-### Setup Inicial
-- [ ] Crear cuenta OpenRouter
-- [ ] Crear cuenta Calendly para agendamiento
-- [ ] Setup cuenta de email (Resend/SendGrid)
-- [ ] Configurar dominio/subdominio para API
-- [ ] Setup repositorio Laravel
+### Landing Page
+- [ ] Diseño de página institucional
+- [ ] Integración del widget
+- [ ] Secciones: Hero, Servicios, Casos, Precios, Contacto
 
-### Backend
-- [ ] Migraciones de base de datos
-- [ ] Modelos Eloquent
-- [ ] ChatSessionService
-- [ ] LLMService con OpenRouter
-- [ ] API Endpoints (REST)
-- [ ] EstimatorService
-- [ ] LeadQualificationService
-- [ ] PDFGeneratorService
-- [ ] Integración Calendly
-- [ ] Sistema de emails/notificaciones
+### Backoffice
+- [ ] Login/autenticación
+- [ ] Dashboard con estadísticas
+- [ ] Listado de leads
+- [ ] Detalle de conversaciones
+- [ ] Configuración de prompts
+- [ ] Selector de modelos por defecto
 
-### Frontend
-- [ ] Setup proyecto React + Vite
-- [ ] Componente ChatWidget
-- [ ] Sistema de mensajes y estado
-- [ ] Quick replies / buttons
-- [ ] Typing indicator
-- [ ] Responsive design
-- [ ] Persistencia local (localStorage)
-- [ ] Animaciones y transiciones
-
-### Integraciones
-- [ ] Conectar frontend con backend API
-- [ ] WebSocket para tiempo real (opcional)
-- [ ] Analytics y tracking
-
-### Testing
-- [ ] Tests unitarios backend
-- [ ] Tests de integración API
-- [ ] Testing manual de flujos
-- [ ] A/B testing setup
-
-### Deploy
-- [ ] Configuración servidor staging
+### Infraestructura
+- [ ] Cuenta OpenRouter configurada
+- [ ] Servidor de staging
 - [ ] CI/CD pipeline
-- [ ] SSL/certificados
-- [ ] Monitoreo (Telescope, logs)
-- [ ] Deploy a producción
-
-### Post-launch
-- [ ] Análisis de conversaciones
-- [ ] Refinamiento de prompts
-- [ ] Optimización de conversiones
-- [ ] Documentación de uso interno
+- [ ] Dominio configurado
 
 ---
 
-## 🎯 Milestones
+## 🎯 Milestones Actualizados
 
 | Fecha objetivo | Milestone | Estado |
 |----------------|-----------|--------|
-| 2025-03-10 | Documentación completa y aprobada | 🚧 En curso |
-| 2025-03-17 | Setup técnico listo | ⏳ Pendiente |
-| 2025-03-31 | MVP funcional en staging | ⏳ Pendiente |
-| 2025-04-07 | Testing y refinamiento | ⏳ Pendiente |
+| 2025-03-05 | Widget funcional con multi-modelo | 🚧 En curso |
+| 2025-03-10 | Backend API completo + tests | ⏳ Pendiente |
+| 2025-03-17 | Landing page + backoffice básico | ⏳ Pendiente |
+| 2025-03-31 | MVP completo en staging | ⏳ Pendiente |
 | 2025-04-14 | Deploy a producción | ⏳ Pendiente |
-| 2025-04-21 | Primera iteración de mejoras | ⏳ Pendiente |
 
 ---
 
-## 📝 Notas y Decisiones
+## 📝 Decisiones Recientes
 
 ### 2025-03-03
-- **Decisión:** Usar OpenRouter en lugar de OpenAI directo por flexibilidad de modelos
-- **Pendiente:** Confirmar si se usará React o Vue para el widget
-- **Idea:** Considerar integración con WhatsApp/Telegram además del web widget
-
-### Decisiones tomadas 2025-03-03
-- ✅ **Nombre del asistente:** Resolver Assistant
-- ✅ **Stack frontend:** React 18 + TypeScript + Vite + Tailwind CSS
-- ✅ **Estructura:** Monorepo en repo existente
-- ✅ **Alcance MVP:** Widget + flujo 5 preguntas + IA + guardar leads + notificaciones (sin PDF ni Calendly por ahora)
-
-### Arquitectura definida
-```
-resolver/
-├── landing/              # Landing page (Next.js o HTML)
-├── chatbot-widget/       # Widget embebible (React)
-├── backoffice/           # Panel admin (React + Laravel API)
-└── api/                  # Backend Laravel (API REST)
-```
-
-### Decisiones pendientes
-- [ ] Colores y branding del widget
-- [ ] Si incluir video/voz en futuras versiones
-- [ ] Estrategia de pricing para clientes que lleguen por el bot
+- ✅ **Widget con multi-modelo implementado**
+  - Claude 3.5 Sonnet (default)
+  - GPT-4o
+  - Gemini Pro
+  - Llama 3.1 70B
+- Selector visual de modelos en el header del chat
+- Cada modelo puede seleccionarse en tiempo real
 
 ---
 
-## 🐛 Issues Conocidos
+## 💡 Próximos Pasos Sugeridos
 
-*Ninguno todavía*
+1. **Probar el widget localmente** con `npm run dev`
+2. **Conectar con backend real** (necesita Laravel corriendo)
+3. **Crear landing page** simple para presentar Resolver
+4. **Backoffice básico** para ver leads entrantes
 
----
-
-## 💡 Ideas Futuras
-
-- Integración multi-canal (mismo bot en web, WhatsApp, Telegram)
-- Análisis de sentimiento en tiempo real
-- Reconocimiento de voz para input
-- Dashboard admin para ver conversaciones en vivo
-- ML para scoring de leads basado en historial
-- Templates de proyectos por industria
-- Integración con CRM (HubSpot, Salesforce)
-
----
-
-## 📈 Métricas a Trackear
-
-Desde el día 1:
-- Número de sesiones iniciadas
-- Tasa de completitud del flujo
-- Tiempo promedio de conversación
-- Leads calificados generados
-- Meetings agendados
-- Propuestas descargadas
-- CSAT (satisfacción del usuario)
-
----
-
-*Este documento debe actualizarse al final de cada sesión de trabajo*
+¿Por dónde querés seguir? 🚀

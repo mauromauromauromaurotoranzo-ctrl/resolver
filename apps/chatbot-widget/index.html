@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resolver Chat Widget - Demo</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        margin: 0;
+        padding: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .demo-content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+      h1 { color: #1e293b; }
+      p { color: #64748b; line-height: 1.6; }
+    </style>
+  </head>
+  <body>
+    <div class="demo-content">
+      <h1>🚀 Resolver.tech</h1>
+      <p>Este es un demo del chatbot widget. El botón flotante aparece en la esquina inferior derecha.</p>
+      <p>Hacé clic en "Charlemos" para iniciar una conversación con Resolver Assistant.</p>
+      
+      <h2>Características:</h2>
+      <ul>
+        <li>✅ Múltiples modelos de IA configurables</li>
+        <li>✅ Quick replies para respuestas rápidas</li>
+        <li>✅ Typing indicator animado</li>
+        <li>✅ Diseño responsive</li>
+        <li>✅ Persistencia de sesión</li>
+      </ul>
+    </div>
+
+    <!-- Widget Container -->
+    <div id="root"></div>
+
+    <script type="module">
+      import { init } from './src/index.tsx';
+      
+      // Initialize with demo config
+      init({
+        apiEndpoint: 'http://localhost:8000',
+        position: 'bottom-right',
+        primaryColor: '#3B82F6',
+        botName: 'Resolver Assistant',
+        showOnLoad: false,
+        delayBeforeShow: 3000,
+        onLeadQualified: (lead) => {
+          console.log('Lead qualified:', lead);
+        },
+      });
+    </script>
+  </body>
+</html>
