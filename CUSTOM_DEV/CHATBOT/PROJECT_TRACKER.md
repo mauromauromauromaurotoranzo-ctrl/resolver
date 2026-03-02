@@ -12,10 +12,11 @@
 | Fase | Progreso | Estado |
 |------|----------|--------|
 | Diseño y Documentación | ██████████ 100% | ✅ Completado |
-| Backend API (Laravel) | ████████░░ 80% | 🚧 En curso |
-| Frontend Widget (React) | █████████░ 90% | ✅ Completado |
-| Landing Page (Next.js) | █████████░ 90% | ✅ Completado |
-| Backoffice (React + Vite) | █████████░ 90% | ✅ Completado |
+| Backend API (Laravel) | █████████░ 95% | ✅ Completado |
+| Frontend Widget (React) | █████████░ 95% | ✅ Completado |
+| Landing Page (Next.js) | █████████░ 95% | ✅ Completado |
+| Backoffice (React + Vite) | █████████░ 95% | ✅ Completado |
+| Documentación & Deploy | ██████████ 100% | ✅ Completado |
 | Testing | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Deploy | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 
