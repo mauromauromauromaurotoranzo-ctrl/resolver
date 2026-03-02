@@ -15,7 +15,7 @@
 | Backend API (Laravel) | ████████░░ 80% | 🚧 En curso |
 | Frontend Widget (React) | █████████░ 90% | ✅ Completado |
 | Landing Page (Next.js) | █████████░ 90% | ✅ Completado |
-| Backoffice | ░░░░░░░░░░ 0% | ⏳ Pendiente |
+| Backoffice (React + Vite) | █████████░ 90% | ✅ Completado |
 | Testing | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Deploy | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 
