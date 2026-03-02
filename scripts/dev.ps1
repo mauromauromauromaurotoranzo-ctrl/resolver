@@ -3,7 +3,15 @@
 
 $ErrorActionPreference = "Stop"
 
+# Get the script directory and project root
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectDir = Split-Path -Parent $ScriptDir
+
+# Change to project directory
+Set-Location $ProjectDir
+
 Write-Host "🚀 Starting development environment..." -ForegroundColor Cyan
+Write-Host "📂 Working directory: $(Get-Location)" -ForegroundColor Gray
 
 # Check if .env exists, if not create from example
 if (-not (Test-Path ".env")) {
