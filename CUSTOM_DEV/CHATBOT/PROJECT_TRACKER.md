@@ -13,13 +13,13 @@
 |------|----------|--------|
 | Diseño y Documentación | ██████████ 100% | ✅ Completado |
 | Backend API (Laravel) | ████████░░ 80% | 🚧 En curso |
-| Frontend Widget (React) | █████████░ 90% | 🚧 En curso |
-| Landing Page | ░░░░░░░░░░ 0% | ⏳ Pendiente |
+| Frontend Widget (React) | █████████░ 90% | ✅ Completado |
+| Landing Page (Next.js) | █████████░ 90% | ✅ Completado |
 | Backoffice | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Testing | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Deploy | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 
-**Overall Progress:** 55%
+**Overall Progress:** 65%
 
 ---
 
@@ -52,79 +52,96 @@
 - [x] QuickReplies component
 - [x] TypingIndicator animado
 - [x] ChatInput con auto-resize
-- [x] **ModelSelector (múltiples LLMs configurables)** ✅
-- [x] Estilos CSS con Tailwind + animaciones
-- [x] Demo HTML funcional
+- [x] ModelSelector (múltiples LLMs: Claude, GPT-4, Gemini, Llama)
+- [x] Estilos CSS con Tailwind
+- [x] Demo HTML
+
+### Landing Page (Next.js 14 + Tailwind)
+- [x] Setup Next.js con TypeScript
+- [x] Configuración Tailwind
+- [x] Layout principal
+- [x] Navbar responsive
+- [x] Hero section con CTA
+- [x] Services section (6 servicios)
+- [x] Process section (5 pasos)
+- [x] Models section (3 modelos de engagement)
+- [x] Case Studies section (3 casos)
+- [x] Pricing section (3 planes)
+- [x] FAQ section (8 preguntas)
+- [x] Contact section
+- [x] Footer
 
 ---
 
 ## 🚧 En Progreso
 
-### Backend
-- [ ] Middleware de autenticación para backoffice
+### Backend API
+- [ ] Middleware de autenticación
 - [ ] Jobs de notificación email
 - [ ] Testing de endpoints
 
-### Frontend
-- [ ] Build para producción (CDN)
-- [ ] Testing manual integrado con backend
-- [ ] Optimizaciones de performance
+### Integración
+- [ ] Conectar widget con backend real
+- [ ] Embeddable script para landing
+- [ ] Configuración de dominios
 
 ---
 
 ## ⏳ Pendiente
 
-### Landing Page
-- [ ] Diseño de página institucional
-- [ ] Integración del widget
-- [ ] Secciones: Hero, Servicios, Casos, Precios, Contacto
-
-### Backoffice
-- [ ] Login/autenticación
+### Backoffice (React + Laravel API)
+- [ ] Login/autenticación admin
 - [ ] Dashboard con estadísticas
 - [ ] Listado de leads
-- [ ] Detalle de conversaciones
-- [ ] Configuración de prompts
-- [ ] Selector de modelos por defecto
+- [ ] Vista detalle de lead
+- [ ] Gestión de configuraciones del bot
+- [ ] Editor de prompts
 
-### Infraestructura
-- [ ] Cuenta OpenRouter configurada
-- [ ] Servidor de staging
+### Testing
+- [ ] Tests unitarios backend
+- [ ] Tests de integración API
+- [ ] Testing manual de flujos
+- [ ] A/B testing setup
+
+### Deploy
+- [ ] Configuración servidor staging
 - [ ] CI/CD pipeline
-- [ ] Dominio configurado
+- [ ] SSL/certificados
+- [ ] Deploy a producción
 
 ---
 
-## 🎯 Milestones Actualizados
+## 🎯 Milestones
 
 | Fecha objetivo | Milestone | Estado |
 |----------------|-----------|--------|
-| 2025-03-05 | Widget funcional con multi-modelo | 🚧 En curso |
-| 2025-03-10 | Backend API completo + tests | ⏳ Pendiente |
-| 2025-03-17 | Landing page + backoffice básico | ⏳ Pendiente |
-| 2025-03-31 | MVP completo en staging | ⏳ Pendiente |
+| 2025-03-10 | Documentación completa y aprobada | ✅ Completado |
+| 2025-03-17 | Backend API funcional | 🚧 En curso |
+| 2025-03-24 | Frontend completo (Widget + Landing) | ✅ Completado |
+| 2025-03-31 | MVP funcional en staging | ⏳ Pendiente |
+| 2025-04-07 | Testing y refinamiento | ⏳ Pendiente |
 | 2025-04-14 | Deploy a producción | ⏳ Pendiente |
 
 ---
 
-## 📝 Decisiones Recientes
+## 📝 Notas y Decisiones
 
 ### 2025-03-03
-- ✅ **Widget con multi-modelo implementado**
-  - Claude 3.5 Sonnet (default)
-  - GPT-4o
-  - Gemini Pro
-  - Llama 3.1 70B
-- Selector visual de modelos en el header del chat
-- Cada modelo puede seleccionarse en tiempo real
+- ✅ **Nombre del asistente:** Resolver Assistant
+- ✅ **Stack frontend:** React 18 + TypeScript + Vite + Tailwind CSS
+- ✅ **Stack landing:** Next.js 14 + Tailwind CSS
+- ✅ **Estructura:** Monorepo en repo existente
+- ✅ **Multi-modelo:** Widget soporta Claude, GPT-4, Gemini, Llama
+
+### Arquitectura definida
+```
+apps/
+├── landing/              # Landing page (Next.js) ✅
+├── chatbot-widget/       # Widget embebible (React) ✅
+├── backoffice/           # Panel admin (React) ⏳
+└── api/                  # Backend Laravel (API REST) 🚧
+```
 
 ---
 
-## 💡 Próximos Pasos Sugeridos
-
-1. **Probar el widget localmente** con `npm run dev`
-2. **Conectar con backend real** (necesita Laravel corriendo)
-3. **Crear landing page** simple para presentar Resolver
-4. **Backoffice básico** para ver leads entrantes
-
-¿Por dónde querés seguir? 🚀
+*Este documento debe actualizarse al final de cada sesión de trabajo*
