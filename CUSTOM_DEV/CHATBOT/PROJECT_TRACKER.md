@@ -11,14 +11,14 @@
 
 | Fase | Progreso | Estado |
 |------|----------|--------|
-| Diseño y Documentación | ████████░░ 80% | 🚧 En curso |
-| Setup Técnico | ░░░░░░░░░░ 0% | ⏳ Pendiente |
-| Desarrollo Backend | ░░░░░░░░░░ 0% | ⏳ Pendiente |
+| Diseño y Documentación | ██████████ 100% | ✅ Completado |
+| Setup Técnico | ██████░░░░ 60% | 🚧 En curso |
+| Desarrollo Backend | ████░░░░░░ 40% | 🚧 En curso |
 | Desarrollo Frontend | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Testing | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 | Deploy | ░░░░░░░░░░ 0% | ⏳ Pendiente |
 
-**Overall Progress:** 15%
+**Overall Progress:** 35%
 
 ---
 
@@ -42,11 +42,23 @@
 
 ## 🚧 En Progreso
 
+### Backend API (Laravel)
+- [x] Estructura de directorios
+- [x] Migraciones de base de datos
+- [x] Modelos Eloquent
+- [x] LLMService (OpenRouter integration)
+- [x] EstimatorService
+- [x] ChatController
+- [x] AdminController
+- [ ] Configuración de rutas API
+- [ ] Middleware de autenticación
+- [ ] Jobs de notificación email
+
 ### Diseño
+- [x] Definir nombre final del asistente: **Resolver Assistant**
 - [ ] Refinar prompts del sistema según feedback
 - [ ] Diseñar avatar/personaje visual del bot
 - [ ] Mockups de UI del widget
-- [ ] Definir nombre final del asistente
 
 ### Planificación
 - [ ] Priorizar features para MVP
@@ -132,8 +144,22 @@
 - **Pendiente:** Confirmar si se usará React o Vue para el widget
 - **Idea:** Considerar integración con WhatsApp/Telegram además del web widget
 
+### Decisiones tomadas 2025-03-03
+- ✅ **Nombre del asistente:** Resolver Assistant
+- ✅ **Stack frontend:** React 18 + TypeScript + Vite + Tailwind CSS
+- ✅ **Estructura:** Monorepo en repo existente
+- ✅ **Alcance MVP:** Widget + flujo 5 preguntas + IA + guardar leads + notificaciones (sin PDF ni Calendly por ahora)
+
+### Arquitectura definida
+```
+resolver/
+├── landing/              # Landing page (Next.js o HTML)
+├── chatbot-widget/       # Widget embebible (React)
+├── backoffice/           # Panel admin (React + Laravel API)
+└── api/                  # Backend Laravel (API REST)
+```
+
 ### Decisiones pendientes
-- [ ] Nombre final del asistente (Reso vs. otros)
 - [ ] Colores y branding del widget
 - [ ] Si incluir video/voz en futuras versiones
 - [ ] Estrategia de pricing para clientes que lleguen por el bot
