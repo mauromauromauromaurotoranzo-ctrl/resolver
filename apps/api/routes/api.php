@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 // Health check
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'service' => 'resolver-chatbot-api']);
+});
+
+// Autenticación (público)
+Route::prefix('v1/auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 });
 
 // Chat sessions (público)
@@ -39,16 +51,20 @@ Route::prefix('v1/chat')->group(function () {
 Route::prefix('v1/admin')->middleware(['auth:sanctum'])->group(function () {
     
     // Leads
-    Route::get('/leads', [LeadController::class, 'index']);
-    Route::get('/leads/{id}', [LeadController::class, 'show']);
-    Route::put('/leads/{id}', [LeadController::class, 'update']);
-    Route::delete('/leads/{id}', [LeadController::class, 'destroy']);
+    Route::get('/leads', [AdminController::class, 'listLeads']);
+    Route::get('/leads/{id}', [AdminController::class, 'getLead']);
+    Route::put('/leads/{id}', [AdminController::class, 'updateLead']);
+    
+    // Stats
+    Route::get('/stats', [AdminController::class, 'getStats']);
     
     // Bot configuration
-    Route::get('/config', [AdminController::class, 'getConfig']);
-    Route::put('/config', [AdminController::class, 'updateConfig']);
+    Route::get('/configurations', [AdminController::class, 'listConfigurations']);
+    Route::get('/configurations/active', [AdminController::class, 'getActiveConfiguration']);
+    Route::post('/configurations', [AdminController::class, 'createConfiguration']);
+    Route::put('/configurations/{id}', [AdminController::class, 'updateConfiguration']);
+    Route::post('/configurations/{id}/activate', [AdminController::class, 'activateConfiguration']);
     
-    // Analytics
-    Route::get('/analytics/overview', [AdminController::class, 'getOverview']);
-    Route::get('/analytics/conversions', [AdminController::class, 'getConversions']);
+    // Active sessions
+    Route::get('/sessions/active', [AdminController::class, 'getActiveSessions']);
 });

@@ -4,16 +4,18 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\BotConfiguration;
 
 class LLMService
 {
     private string $apiKey;
     private string $baseUrl = 'https://openrouter.ai/api/v1';
-    private string $model = 'anthropic/claude-3.5-sonnet';
+    private string $model;
 
     public function __construct()
     {
         $this->apiKey = config('services.openrouter.key');
+        $this->model = $this->resolveDefaultModel();
     }
 
     /**
@@ -121,6 +123,27 @@ class LLMService
         }
 
         return [];
+    }
+
+    /**
+     * Resuelve el modelo por defecto usando la configuración activa del bot
+     * y, si no existe, el valor de configuración/env.
+     */
+    private function resolveDefaultModel(): string
+    {
+        try {
+            $activeConfig = BotConfiguration::where('is_active', true)->first();
+
+            if ($activeConfig && !empty($activeConfig->default_model)) {
+                return $activeConfig->default_model;
+            }
+        } catch (\Exception $e) {
+            Log::warning('LLMService: error leyendo configuración activa de bot', [
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return config('services.openrouter.model', 'anthropic/claude-3.5-sonnet');
     }
 
     /**

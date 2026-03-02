@@ -20,6 +20,7 @@ class ChatSession extends Model
         'status',
         'source_url',
         'utm_data',
+        'collected_data',
         'started_at',
         'ended_at',
         'lead_score',
@@ -27,6 +28,7 @@ class ChatSession extends Model
 
     protected $casts = [
         'utm_data' => 'array',
+        'collected_data' => 'array',
         'started_at' => 'datetime',
         'ended_at' => 'datetime',
     ];

@@ -35,6 +35,7 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
 
   const apiRef = useRef(new ApiService(apiEndpoint));
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sessionIdRef = useRef<string | null>(null);
 
   // Initialize session
   useEffect(() => {
@@ -45,14 +46,27 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
         // Try to recover existing session
         const recovered = apiRef.current.recoverSession();
         
-        if (recovered.sessionId && recovered.visitorId) {
+        console.log('Recovered session:', recovered);
+        
+        // Only restore if we have a valid sessionId
+        if (recovered.sessionId && recovered.visitorId && recovered.sessionId !== 'undefined' && recovered.sessionId !== 'null') {
           // TODO: Validate session is still active with backend
           setSessionId(recovered.sessionId);
+          sessionIdRef.current = recovered.sessionId;
           setHasStarted(true);
+          setState('idle');
+          console.log('Session restored:', recovered.sessionId);
+        } else {
+          // Clear invalid session data
+          console.log('No valid session found, clearing localStorage');
+          apiRef.current.clearSession();
+          setHasStarted(false);
           setState('idle');
         }
       } catch (err) {
         console.error('Failed to recover session:', err);
+        setHasStarted(false);
+        setState('idle');
       }
     };
 
@@ -66,24 +80,33 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
 
       const data = await apiRef.current.createSession();
       
+      console.log('Session data received:', data);
+      console.log('SessionId:', data.sessionId);
+      
+      if (!data.sessionId) {
+        throw new Error('Session ID not received from API');
+      }
+      
       setSessionId(data.sessionId);
+      sessionIdRef.current = data.sessionId;
       setHasStarted(true);
       
       // Add welcome message
       const welcomeMessage: Message = {
         id: uuidv4(),
         role: 'assistant',
-        content: data.welcomeMessage,
+        content: data.welcomeMessage || data.welcome_message || '¡Hola! ¿En qué puedo ayudarte?',
         timestamp: new Date(),
         metadata: {
-          quickReplies: data.quickReplies,
+          quickReplies: data.quickReplies || data.quick_replies || [],
         },
       };
       
       setMessages([welcomeMessage]);
-      setQuickReplies(data.quickReplies);
+      setQuickReplies(data.quickReplies || data.quick_replies || []);
       setState('waiting_for_input');
     } catch (err) {
+      console.error('Error starting session:', err);
       setError(err instanceof Error ? err.message : 'Failed to start chat');
       setState('error');
     }
@@ -109,7 +132,54 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
   }, [isOpen, openChat, closeChat]);
 
   const sendMessage = useCallback(async (content: string) => {
-    if (!sessionId || !content.trim()) return;
+    if (!content.trim()) {
+      console.error('Cannot send message - empty content');
+      return;
+    }
+
+    // Use ref to get the latest sessionId value, fallback to localStorage
+    let currentSessionId = sessionIdRef.current || sessionId || localStorage.getItem('resolver_session_id');
+    
+    console.log('sendMessage - sessionIdRef.current:', sessionIdRef.current);
+    console.log('sendMessage - sessionId state:', sessionId);
+    console.log('sendMessage - localStorage sessionId:', localStorage.getItem('resolver_session_id'));
+    console.log('sendMessage - hasStarted:', hasStarted);
+    console.log('sendMessage - currentSessionId:', currentSessionId);
+    
+    // If no session exists OR hasStarted is true but sessionId is missing, create one
+    if (!currentSessionId || currentSessionId === 'undefined' || currentSessionId === 'null') {
+      console.log('No valid session found, creating new session...');
+      console.log('hasStarted:', hasStarted, 'currentSessionId:', currentSessionId);
+      try {
+        const data = await apiRef.current.createSession();
+        console.log('Session created in sendMessage:', data);
+        
+        if (!data.sessionId) {
+          throw new Error('Session ID not received from API');
+        }
+        
+        currentSessionId = data.sessionId;
+        setSessionId(data.sessionId);
+        sessionIdRef.current = data.sessionId;
+        setHasStarted(true);
+        
+        console.log('Session ID set:', currentSessionId);
+      } catch (err) {
+        console.error('Failed to create session in sendMessage:', err);
+        setError('No se pudo iniciar la sesión. Por favor, intenta de nuevo.');
+        setHasStarted(false);
+        return;
+      }
+    }
+    
+    if (!currentSessionId || currentSessionId === 'undefined' || currentSessionId === 'null') {
+      console.error('Cannot send message - no valid sessionId available');
+      setError('No hay una sesión activa. Por favor, intenta de nuevo.');
+      setHasStarted(false);
+      return;
+    }
+    
+    console.log('Sending message with sessionId:', currentSessionId);
 
     try {
       setState('loading');
@@ -131,7 +201,7 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
       await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
 
       // Send to API
-      const response = await apiRef.current.sendMessage(sessionId, content);
+      const response = await apiRef.current.sendMessage(currentSessionId, content);
 
       // Add assistant message
       const assistantMessage: Message = {
@@ -154,7 +224,7 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
       if (response.nextStep === 'estimation_ready') {
         // Trigger lead qualification callback
         onLeadQualified?.({
-          id: sessionId,
+          id: currentSessionId,
           ...response.collectedData,
         });
       }
@@ -171,7 +241,7 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
       };
       setMessages(prev => [...prev, errorMessage]);
     }
-  }, [sessionId, onLeadQualified]);
+  }, [sessionId, hasStarted, onLeadQualified]); // Keep sessionId in deps for reactivity, but use ref for actual value
 
   const selectQuickReply = useCallback((reply: QuickReply) => {
     sendMessage(reply.label);

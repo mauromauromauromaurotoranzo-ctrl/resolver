@@ -36,6 +36,7 @@ class ChatController extends Controller
         $visitorId = $request->header('X-Visitor-ID') ?: Str::uuid()->toString();
 
         $session = ChatSession::create([
+            'id' => Str::uuid()->toString(),
             'visitor_id' => $visitorId,
             'status' => 'active',
             'source_url' => $validated['source_url'] ?? null,
@@ -46,6 +47,7 @@ class ChatController extends Controller
         $welcomeMessage = $this->getWelcomeMessage();
 
         ChatMessage::create([
+            'id' => Str::uuid()->toString(),
             'session_id' => $session->id,
             'role' => 'assistant',
             'content' => $welcomeMessage['text'],
@@ -77,6 +79,7 @@ class ChatController extends Controller
 
         // Guardar mensaje del usuario
         ChatMessage::create([
+            'id' => Str::uuid()->toString(),
             'session_id' => $session->id,
             'role' => 'user',
             'content' => $validated['message'],
@@ -108,6 +111,7 @@ class ChatController extends Controller
 
         // Guardar respuesta del asistente
         $assistantMessage = ChatMessage::create([
+            'id' => Str::uuid()->toString(),
             'session_id' => $session->id,
             'role' => 'assistant',
             'content' => $llmResponse['content'],

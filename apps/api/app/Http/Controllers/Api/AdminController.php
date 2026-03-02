@@ -123,12 +123,23 @@ class AdminController extends Controller
      */
     public function createConfiguration(Request $request)
     {
-        $validated = $request->validate([
+        $data = $request->all();
+
+        // Aceptar tanto camelCase (frontend) como snake_case (backend)
+        if (isset($data['systemPrompt']) && !isset($data['system_prompt'])) {
+            $data['system_prompt'] = $data['systemPrompt'];
+        }
+        if (isset($data['defaultModel']) && !isset($data['default_model'])) {
+            $data['default_model'] = $data['defaultModel'];
+        }
+
+        $validated = validator($data, [
             'name' => 'required|string|max:100',
             'system_prompt' => 'required|string',
+            'default_model' => 'nullable|string|max:255',
             'flow_config' => 'nullable|array',
             'is_active' => 'boolean',
-        ]);
+        ])->validate();
 
         // Si se activa esta config, desactivar las demás
         if ($validated['is_active'] ?? false) {
@@ -148,12 +159,22 @@ class AdminController extends Controller
      */
     public function updateConfiguration(Request $request, string $id)
     {
-        $validated = $request->validate([
+        $data = $request->all();
+
+        if (isset($data['systemPrompt']) && !isset($data['system_prompt'])) {
+            $data['system_prompt'] = $data['systemPrompt'];
+        }
+        if (isset($data['defaultModel']) && !isset($data['default_model'])) {
+            $data['default_model'] = $data['defaultModel'];
+        }
+
+        $validated = validator($data, [
             'name' => 'string|max:100',
             'system_prompt' => 'string',
+            'default_model' => 'nullable|string|max:255',
             'flow_config' => 'array',
             'is_active' => 'boolean',
-        ]);
+        ])->validate();
 
         $config = BotConfiguration::findOrFail($id);
 

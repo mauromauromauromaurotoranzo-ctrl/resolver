@@ -13,6 +13,7 @@ class BotConfiguration extends Model
         'name',
         'version',
         'system_prompt',
+        'default_model',
         'flow_config',
         'is_active',
     ];

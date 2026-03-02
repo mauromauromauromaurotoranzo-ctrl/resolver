@@ -52,6 +52,23 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
     }
   }, [showOnLoad, delayBeforeShow, openChat]);
 
+  // Listen for openResolverChat event from landing page
+  useEffect(() => {
+    const handleOpenChatEvent = () => {
+      if (!isOpen) {
+        openChat();
+      }
+    };
+
+    window.addEventListener('openResolverChat', handleOpenChatEvent);
+    window.addEventListener('resolver-chat-open', handleOpenChatEvent);
+
+    return () => {
+      window.removeEventListener('openResolverChat', handleOpenChatEvent);
+      window.removeEventListener('resolver-chat-open', handleOpenChatEvent);
+    };
+  }, [isOpen, openChat]);
+
   const positionClasses = {
     'bottom-right': 'right-4 sm:right-6',
     'bottom-left': 'left-4 sm:left-6',
