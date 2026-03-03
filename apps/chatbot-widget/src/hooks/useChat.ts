@@ -21,6 +21,7 @@ interface UseChatReturn {
   toggleChat: () => void;
   sendMessage: (content: string) => Promise<void>;
   selectQuickReply: (reply: QuickReply) => void;
+  submitQuote: (contactData?: { email?: string; phone?: string; contactName?: string; companyName?: string }) => Promise<void>;
   hasStarted: boolean;
 }
 
@@ -247,6 +248,43 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
     sendMessage(reply.label);
   }, [sendMessage]);
 
+  const submitQuote = useCallback(async (contactData?: { email?: string; phone?: string; contactName?: string; companyName?: string }) => {
+    const currentSessionId = sessionIdRef.current || sessionId || localStorage.getItem('resolver_session_id');
+    
+    if (!currentSessionId) {
+      setError('No hay una sesión activa');
+      return;
+    }
+
+    try {
+      setState('loading');
+      setError(null);
+
+      const response = await apiRef.current.submitQuote(currentSessionId, contactData);
+
+      // Agregar mensaje de confirmación
+      const confirmationMessage: Message = {
+        id: uuidv4(),
+        role: 'assistant',
+        content: response.message || '✅ Tu solicitud de cotización ha sido enviada. Nos pondremos en contacto contigo pronto.',
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, confirmationMessage]);
+      setState('waiting_for_input');
+
+      // Trigger callback
+      onLeadQualified?.({
+        id: currentSessionId,
+        ...contactData,
+      });
+    } catch (err) {
+      console.error('Error submitting quote:', err);
+      setError(err instanceof Error ? err.message : 'No se pudo enviar la solicitud. Por favor, intenta de nuevo.');
+      setState('error');
+    }
+  }, [sessionId, onLeadQualified]);
+
   return {
     messages,
     isOpen,
@@ -260,6 +298,7 @@ export function useChat({ apiEndpoint, onLeadQualified }: UseChatProps): UseChat
     toggleChat,
     sendMessage,
     selectQuickReply,
+    submitQuote,
     hasStarted,
   };
 }

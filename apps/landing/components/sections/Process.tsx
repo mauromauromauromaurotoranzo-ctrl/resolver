@@ -65,7 +65,7 @@ export function Process() {
         {/* Steps */}
         <div className="relative">
           {/* Connection Line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-resolver-500 to-purple-500 hidden md:block" />
+          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-resolver-500 to-resolver-400 hidden md:block" />
 
           <div className="space-y-12">
             {steps.map((step, index) => {

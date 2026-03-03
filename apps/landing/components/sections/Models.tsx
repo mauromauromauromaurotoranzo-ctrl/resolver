@@ -85,7 +85,7 @@ export function Models() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`relative rounded-2xl p-8 ${
                   model.popular
-                    ? 'bg-gradient-to-br from-resolver-600 to-purple-600 text-white shadow-xl scale-105'
+                    ? 'bg-gradient-to-br from-resolver-700 to-resolver-600 text-white shadow-xl scale-105'
                     : 'bg-slate-50 border border-slate-200 hover:border-resolver-300 transition-colors'
                 }`}
               >

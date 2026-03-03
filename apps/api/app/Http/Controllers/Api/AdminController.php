@@ -7,6 +7,7 @@ use App\Models\Lead;
 use App\Models\ChatSession;
 use App\Models\BotConfiguration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -147,6 +148,7 @@ class AdminController extends Controller
         }
 
         $config = BotConfiguration::create([
+            'id' => Str::uuid()->toString(),
             ...$validated,
             'version' => $this->generateVersion(),
         ]);

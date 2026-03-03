@@ -132,7 +132,7 @@ export function CaseStudies() {
 
                 {/* Right: Testimonial */}
                 <div className="flex flex-col justify-center">
-                  <div className="relative bg-gradient-to-br from-resolver-600/20 to-purple-600/20 rounded-xl p-6 border border-resolver-500/20">
+                  <div className="relative bg-gradient-to-br from-resolver-600/20 to-resolver-500/20 rounded-xl p-6 border border-resolver-500/20">
                     <Quote className="absolute top-4 left-4 w-8 h-8 text-resolver-500/30" />
                     
                     <blockquote className="relative z-10 text-lg text-slate-200 italic mb-6 pt-4">
@@ -140,7 +140,7 @@ export function CaseStudies() {
                     </blockquote>
 
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-resolver-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 bg-gradient-to-br from-resolver-600 to-resolver-500 rounded-full flex items-center justify-center text-white font-bold">
                         {caseStudy.testimonial.author.charAt(0)}
                       </div>
                       <div>

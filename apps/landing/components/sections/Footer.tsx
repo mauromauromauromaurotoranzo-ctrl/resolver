@@ -11,8 +11,8 @@ const footerLinks = {
   ],
   company: [
     { label: 'Cómo trabajamos', href: '#process' },
-    { label: 'Casos de éxito', href: '#cases' },
-    { label: 'Precios', href: '#pricing' },
+    // { label: 'Casos de éxito', href: '#cases' },
+    // { label: 'Precios', href: '#pricing' },
     { label: 'FAQ', href: '#faq' },
   ],
   legal: [

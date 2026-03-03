@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-resolver-50 via-white to-purple-50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-resolver-50 via-white to-resolver-100" />
       
       {/* Animated background shapes */}
       <div className="absolute inset-0 overflow-hidden">
@@ -33,7 +33,7 @@ export function Hero() {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] bg-purple-200/30 rounded-full blur-3xl"
+          className="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] bg-resolver-200/30 rounded-full blur-3xl"
         />
       </div>
 

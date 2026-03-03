@@ -40,6 +40,9 @@ Route::prefix('v1/chat')->group(function () {
     // Obtener estimación
     Route::get('/sessions/{sessionId}/estimate', [ChatController::class, 'getEstimate']);
     
+    // Enviar resumen para cotización
+    Route::post('/sessions/{sessionId}/quote', [ChatController::class, 'submitQuote']);
+    
     // Generar propuesta PDF
     Route::post('/sessions/{sessionId}/proposal', [ChatController::class, 'generateProposal']);
     

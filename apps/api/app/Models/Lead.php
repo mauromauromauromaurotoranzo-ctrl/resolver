@@ -19,6 +19,7 @@ class Lead extends Model
         'session_id',
         'email',
         'phone',
+        'contact_name',
         'company_name',
         'industry',
         'project_type',

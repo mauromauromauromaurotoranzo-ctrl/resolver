@@ -10,6 +10,7 @@ class BotConfiguration extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'name',
         'version',
         'system_prompt',
@@ -17,6 +18,10 @@ class BotConfiguration extends Model
         'flow_config',
         'is_active',
     ];
+
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $casts = [
         'flow_config' => 'array',

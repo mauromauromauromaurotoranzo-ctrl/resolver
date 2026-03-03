@@ -133,6 +133,104 @@ class ChatController extends Controller
     }
 
     /**
+     * Envía resumen del proyecto para cotización
+     */
+    public function submitQuote(Request $request, string $sessionId)
+    {
+        $validated = $request->validate([
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'contact_name' => 'nullable|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+        ]);
+
+        $session = ChatSession::findOrFail($sessionId);
+
+        if ($session->status !== 'active') {
+            return response()->json(['error' => 'Session expired'], 410);
+        }
+
+        // Generar resumen de la conversación
+        $conversationSummary = $this->generateConversationSummary($session);
+        
+        // Obtener datos recolectados
+        $collectedData = $session->collected_data ?? [];
+        
+        // Mapear project_type desde collected_data
+        $projectType = 'unknown';
+        if (!empty($collectedData['project_type'])) {
+            $typeMap = [
+                'web_app' => 'software',
+                'mobile_app' => 'software',
+                'automation' => 'agent_ai',
+                'other' => 'unknown',
+            ];
+            $projectType = $typeMap[$collectedData['project_type']] ?? 'unknown';
+        }
+
+        // Crear o actualizar lead
+        $lead = Lead::firstOrNew(['session_id' => $session->id]);
+        
+        if (!$lead->exists) {
+            $lead->id = Str::uuid()->toString();
+        }
+        
+        $lead->email = $validated['email'] ?? $lead->email;
+        $lead->phone = $validated['phone'] ?? $lead->phone;
+        $lead->contact_name = $validated['contact_name'] ?? $lead->contact_name;
+        $lead->company_name = $validated['company_name'] ?? $lead->company_name;
+        $lead->industry = $collectedData['industry'] ?? $lead->industry;
+        $lead->project_type = $projectType;
+        $lead->problem_description = $conversationSummary;
+        $lead->current_solution = $collectedData['current_solution'] ?? $lead->current_solution;
+        $lead->timeline = $collectedData['timeline'] ?? $lead->timeline;
+        $lead->budget_range = $collectedData['budget_range'] ?? $lead->budget_range;
+        $lead->status = 'new';
+        $lead->save();
+
+        // Marcar sesión como completada
+        $session->status = 'completed';
+        $session->ended_at = now();
+        $session->save();
+
+        return response()->json([
+            'success' => true,
+            'lead_id' => $lead->id,
+            'message' => 'Tu solicitud de cotización ha sido enviada. Nos pondremos en contacto contigo pronto.',
+        ], 201);
+    }
+
+    /**
+     * Genera un resumen de la conversación
+     */
+    private function generateConversationSummary(ChatSession $session): string
+    {
+        $messages = ChatMessage::where('session_id', $session->id)
+            ->where('role', '!=', 'system')
+            ->orderBy('created_at')
+            ->get();
+
+        $summary = "Resumen de la conversación:\n\n";
+        
+        foreach ($messages as $msg) {
+            $role = $msg->role === 'user' ? 'Usuario' : 'Asistente';
+            $summary .= "{$role}: {$msg->content}\n\n";
+        }
+
+        $collectedData = $session->collected_data ?? [];
+        if (!empty($collectedData)) {
+            $summary .= "\nDatos recolectados:\n";
+            foreach ($collectedData as $key => $value) {
+                if (!empty($value)) {
+                    $summary .= "- " . ucfirst(str_replace('_', ' ', $key)) . ": {$value}\n";
+                }
+            }
+        }
+
+        return $summary;
+    }
+
+    /**
      * Genera estimación del proyecto
      */
     public function getEstimate(string $sessionId)
@@ -271,12 +369,15 @@ class ChatController extends Controller
      */
     private function getQuickRepliesForStep(string $step): array
     {
+        // Nota:
+        // - La intención de "tipo de solución" (web, app móvil, automatización IA, etc.)
+        //   ya se pregunta en el mensaje de bienvenida inicial.
+        // - Para evitar que esa misma pregunta con quick replies se repita
+        //   después de cada respuesta del asistente, NO devolvemos más
+        //   quick replies específicos para el paso "project_type".
         $replies = [
             'project_type' => [
-                ['id' => 'web_app', 'label' => 'Aplicación Web'],
-                ['id' => 'mobile_app', 'label' => 'App Móvil'],
-                ['id' => 'automation', 'label' => 'Automatización IA'],
-                ['id' => 'other', 'label' => 'Otro'],
+                // Sin quick replies aquí para no repetir la pregunta inicial
             ],
             'industry' => [
                 ['id' => 'healthcare', 'label' => 'Salud'],

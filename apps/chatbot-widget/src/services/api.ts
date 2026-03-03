@@ -122,6 +122,13 @@ class ApiService {
     });
   }
 
+  async submitQuote(sessionId: string, contactData?: { email?: string; phone?: string; contactName?: string; companyName?: string }): Promise<{ success: boolean; leadId: string; message: string }> {
+    return this.fetch(`/chat/sessions/${sessionId}/quote`, {
+      method: 'POST',
+      body: JSON.stringify(contactData || {}),
+    });
+  }
+
   // Model management
   async getAvailableModels(): Promise<Array<{ id: string; name: string; provider: string; isAvailable: boolean }>> {
     return this.fetch('/models');

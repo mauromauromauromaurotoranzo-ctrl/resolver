@@ -29,11 +29,21 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
     toggleChat,
     sendMessage,
     selectQuickReply,
+    submitQuote,
     hasStarted,
   } = useChat({ apiEndpoint, onLeadQualified });
 
+  const [showQuoteModal, setShowQuoteModal] = React.useState(false);
+  const [quoteForm, setQuoteForm] = React.useState({
+    email: '',
+    phone: '',
+    contactName: '',
+    companyName: '',
+  });
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [selectedModel, setSelectedModel] = React.useState('anthropic/claude-3.5-sonnet');
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -74,8 +84,12 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
     'bottom-left': 'left-4 sm:left-6',
   };
 
+  const containerPosition = isExpanded
+    ? 'inset-x-0 bottom-0 flex justify-center'
+    : `bottom-4 sm:bottom-6 ${positionClasses[position]}`;
+
   return (
-    <div className={`fixed bottom-4 sm:bottom-6 ${positionClasses[position]} z-50 font-sans`}>
+    <div className={`fixed ${containerPosition} z-50 font-sans`}>
       {/* Chat Button */}
       {!isOpen && (
         <button
@@ -95,7 +109,14 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
       {/* Chat Window */}
       {isOpen && (
         <div className="animate-slide-up">
-          <div className="w-[90vw] sm:w-[400px] h-[70vh] sm:h-[600px] max-h-[700px] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden">
+          <div
+            className={`
+              bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden
+              ${isExpanded
+                ? 'w-[95vw] sm:w-[900px] h-[85vh] max-h-[90vh]'
+                : 'w-[90vw] sm:w-[400px] h-[70vh] sm:h-[600px] max-h-[700px]'}
+            `}
+          >
             
             {/* Header */}
             <div 
@@ -125,6 +146,35 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
                   onSelect={setSelectedModel}
                   disabled={isLoading}
                 />
+                
+                {/* Expand / collapse button */}
+                <button
+                  onClick={() => setIsExpanded(prev => !prev)}
+                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                  title={isExpanded ? 'Reducir chat' : 'Expandir chat'}
+                >
+                  {isExpanded ? (
+                    // Minimize icon
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 14h6v6M4 10h6V4M14 4h6v6M14 20v-6h6"
+                      />
+                    </svg>
+                  ) : (
+                    // Maximize icon
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 9V4h5M4 15v5h5M20 9V4h-5M20 15v5h-5"
+                      />
+                    </svg>
+                  )}
+                </button>
                 
                 <button
                   onClick={closeChat}
@@ -183,11 +233,117 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
             </div>
 
             {/* Input Area */}
-            <ChatInput
-              onSend={sendMessage}
-              disabled={isLoading || !hasStarted}
-              placeholder={hasStarted ? 'Escribí tu mensaje...' : 'Esperando a iniciar...'}
-            />
+            <div className="border-t border-gray-200 bg-white">
+              <ChatInput
+                onSend={sendMessage}
+                disabled={isLoading || !hasStarted}
+                placeholder={hasStarted ? 'Escribí tu mensaje...' : 'Esperando a iniciar...'}
+              />
+              
+              {/* Quote Button */}
+              {hasStarted && messages.length > 1 && (
+                <div className="px-4 pb-3">
+                  <button
+                    onClick={() => setShowQuoteModal(true)}
+                    disabled={isLoading}
+                    className="w-full mt-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    style={{ backgroundColor: primaryColor }}
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Enviar y Cotizar
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quote Modal */}
+      {showQuoteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up">
+            <h3 className="text-xl font-semibold mb-4">Enviar solicitud de cotización</h3>
+            <p className="text-gray-600 text-sm mb-6">
+              Completa tus datos para que podamos contactarte con la cotización de tu proyecto.
+            </p>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nombre <span className="text-gray-400">(opcional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={quoteForm.contactName}
+                  onChange={(e) => setQuoteForm({ ...quoteForm, contactName: e.target.value })}
+                  placeholder="Tu nombre"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email <span className="text-gray-400">(opcional)</span>
+                </label>
+                <input
+                  type="email"
+                  value={quoteForm.email}
+                  onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })}
+                  placeholder="tu@email.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Teléfono <span className="text-gray-400">(opcional)</span>
+                </label>
+                <input
+                  type="tel"
+                  value={quoteForm.phone}
+                  onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })}
+                  placeholder="+54 11 1234-5678"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Empresa <span className="text-gray-400">(opcional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={quoteForm.companyName}
+                  onChange={(e) => setQuoteForm({ ...quoteForm, companyName: e.target.value })}
+                  placeholder="Nombre de tu empresa"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowQuoteModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={async () => {
+                  await submitQuote(quoteForm);
+                  setShowQuoteModal(false);
+                  setQuoteForm({ email: '', phone: '', contactName: '', companyName: '' });
+                }}
+                disabled={isLoading}
+                className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: primaryColor }}
+              >
+                {isLoading ? 'Enviando...' : 'Enviar'}
+              </button>
+            </div>
           </div>
         </div>
       )}

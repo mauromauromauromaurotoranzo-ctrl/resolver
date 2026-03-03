@@ -58,7 +58,7 @@ const services = [
 
 const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
   blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
-  purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
+  purple: { bg: 'bg-resolver-50', text: 'text-resolver-600', border: 'border-resolver-200' },
   green: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200' },
   orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
   red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200' },

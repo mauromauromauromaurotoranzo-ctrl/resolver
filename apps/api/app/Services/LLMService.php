@@ -38,7 +38,8 @@ class LLMService
                 'model' => $this->model,
                 'messages' => $messages,
                 'temperature' => 0.7,
-                'max_tokens' => 500,
+                // Reducimos max_tokens para evitar errores 402 de créditos insuficientes
+                'max_tokens' => 256,
             ]);
 
             if ($response->successful()) {
@@ -55,6 +56,15 @@ class LLMService
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
+
+            // Si es error de créditos (402), devolvemos un mensaje más amigable
+            if ($response->status() === 402) {
+                return [
+                    'success' => false,
+                    'content' => 'En este momento tengo un límite de uso del modelo de IA y no puedo generar una respuesta completa. Podés igual dejar tus datos con el botón "Enviar y Cotizar" así te contactamos con una propuesta.',
+                    'fallback' => true,
+                ];
+            }
 
             return $this->fallbackResponse();
 

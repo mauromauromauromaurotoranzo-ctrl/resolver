@@ -65,21 +65,12 @@ export function Pricing() {
     <section id="pricing" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-            Inversión transparente
-          </h2>
-          <p className="text-lg text-slate-600">
-            Sin sorpresas ni costos ocultos. Cada plan incluye todo lo necesario 
-            para llevar tu proyecto a producción.
-          </p>
-        </motion.div>
+        {/* 
+          Header ocultado a pedido:
+          Antes:
+          <h2>Inversión transparente</h2>
+          <p>Sin sorpresas ni costos ocultos...</p>
+        */}
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8">
